@@ -11,36 +11,41 @@ routes.post('/signup', async (req,res)=>{
         const data = req.body ;
         const check = await Person.findOne({name :data.name}) ;
         if(check){
-            return res.status(201).send('Username already exit') ;
+            return res.status(404).send('Username already exit') ;
         }   
         const newperson = new Person(data) ;
-        const reponse =  await newperson.save() ;
-        res.status(201).json({message : 'person created',data : reponse}) ;
+        const response =  await newperson.save() ;
+        return res.status(200).json({message : 'person created',data : response}) ;
 
     }catch(err){
-        console.log(err.message) ; 
-        res.status(500).send(err.message) ;
+        // console.log(err.message) ; 
+        return res.status(500).send(err.message) ;
     }
     
 })
 
-routes.post('/signin' ,localAuthMiddleware,async (req,res)=>{
+routes.post('/signin' ,  localAuthMiddleware,async (req,res)=>{
 
     try{
-        const data = req.body ;
-        const name = data.name ;
+        // const data = req.body;
+        // const name = data.name ;
+        // const password = data.password ;
+        // console.log("name" , name) ;
         // const response = await Person.findOne({name}) ;
         // if(!response){
-        //     res.status(404).json({message : 'person not found'}) ;
+        //    return res.status(404).json({message : 'Username not found', response: response}) ;
         // }
-        // if(data.password != response.password){
-        //     res.status(401).json({message : 'password incorrect'}) ;
+        // console.log( "response", response) ;
+        // const isMatch = await response.comparePassword(password);
+
+        // if (!isMatch) {
+        //     return res.status(404).json({ message: "Password incorrect" , isMatch : isMatch});
         // }
-        res.status(201).json({message : 'person signin'}) ;
+        return res.status(200).json({message : 'Person signin'}) ;
 
     }catch(err){
         console.log(err.message) 
-        res.status(500).send(err) ;
+        return res.status(500).send(err.message) ;
     }
     
 })
