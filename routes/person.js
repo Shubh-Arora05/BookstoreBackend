@@ -24,23 +24,23 @@ routes.post('/signup', async (req,res)=>{
     
 })
 
-routes.post('/signin' ,  localAuthMiddleware,async (req,res)=>{
+routes.post('/signin' ,async (req,res)=>{
 
     try{
-        // const data = req.body;
-        // const name = data.name ;
-        // const password = data.password ;
-        // console.log("name" , name) ;
-        // const response = await Person.findOne({name}) ;
-        // if(!response){
-        //    return res.status(404).json({message : 'Username not found', response: response}) ;
-        // }
-        // console.log( "response", response) ;
-        // const isMatch = await response.comparePassword(password);
+        const data = req.body;
+        const name = data.name ;
+        const password = data.password ;
+        console.log("name" , name) ;
+        const response = await Person.findOne({name}) ;
+        if(!response){
+           return res.status(404).send({message : 'Username not found', response: response}) ;
+        }
+        console.log( "response", response) ;
+        const isMatch = await response.comparePassword(password);
 
-        // if (!isMatch) {
-        //     return res.status(404).json({ message: "Password incorrect" , isMatch : isMatch});
-        // }
+        if (!isMatch) {
+            return res.status(404).json({ message: "Password incorrect" , isMatch : isMatch});
+        }
         return res.status(200).json({message : 'Person signin'}) ;
 
     }catch(err){
