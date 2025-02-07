@@ -1,8 +1,10 @@
 const express = require("express");
 const routes = express.Router();
 const Book = require("../models/book");
+const auth = require('./../jwt.js') ;
+const check_token = auth.check_token ;
 
-routes.get("/", async (req, res) => {
+routes.get("/", check_token, async (req, res) => {
   try {
     const data = await Book.find({});
     return res.status(200).json({
@@ -15,7 +17,7 @@ routes.get("/", async (req, res) => {
   }
 });
 
-routes.get("/:id", async (req, res) => {
+routes.get("/:id", check_token, async (req, res) => {
   try {
     const id = req.params.id;
     const data = await Book.findById(id);
@@ -28,7 +30,7 @@ routes.get("/:id", async (req, res) => {
   }
 });
 
-routes.post("/", async (req, res) => {
+routes.post("/", check_token ,async (req, res) => {
   try {
     const data = req.body;
     if (!data.name || !data.author || !data.year) {
@@ -48,7 +50,7 @@ routes.post("/", async (req, res) => {
   }
 });
 
-routes.put("/:id", async (req, res) => {
+routes.put("/:id",  check_token ,async (req, res) => {
   try {
     const id = req.params.id;
     // console.log( "id : " ,id) ;
@@ -67,7 +69,7 @@ routes.put("/:id", async (req, res) => {
   }
 });
 
-routes.delete("/:id", async (req, res) => {
+routes.delete("/:id",  check_token ,async (req, res) => {
   try {
     const id = req.params.id;
     // console.log( "id : " ,id) ;
@@ -76,7 +78,7 @@ routes.delete("/:id", async (req, res) => {
     if (!response) {
       return res.status(404).send({ message: "Id not Found" });
     }
-    return es.status(200).send(response);
+    return res.status(200).send(response);
   } catch (err) {
     // console.log(err);
     return res.status(500).send(err.message);
